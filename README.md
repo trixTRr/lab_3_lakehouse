@@ -24,7 +24,12 @@ Z-order на FL_DATE дополнительно ускоряет точные д
 
 
 # Как запустить:
-## 1. Зайдите в командную строку и введите:
+
+## 1. Скачайте датасет
+
+Flight Delay Analysis 2018–2024 (https://www.kaggle.com/code/peymanradmanesh/flight-delay-analysis-2018-2024/input). Добавьте его в папку data/raw
+
+## 2. Зайдите в командную строку и введите:
 
 wsl -d Ubuntu
 
@@ -34,9 +39,9 @@ python3 -m venv venv
 
 source venv/bin/activate
 
-## 2. Активируйте WSL интеграцию в Docker Desktop
+## 3. Активируйте WSL интеграцию в Docker Desktop
 
-## 3. Перенесите в локальную директорию все файлы
+## 4. Перенесите в локальную директорию все файлы
 
 mkdir -p ~/lab_3_lakehouse
 
@@ -48,7 +53,7 @@ python3 -m venv venv
 
 source venv/bin/activate
 
-## 4. Выполните файлы:
+## 5. Выполните файлы:
 
 python src/bronze/ingest.py
 
@@ -177,6 +182,8 @@ write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 Использован Docker контейнер для MLFlow с образом python:3.10-slim.
 
 ## 4. MLflow логирование
+
+http://localhost:5001
 
 ### Выполненные действия:
 
