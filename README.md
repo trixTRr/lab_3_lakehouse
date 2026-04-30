@@ -80,7 +80,7 @@ mlflow ui --backend-store-uri file:./mlflow_local --port 5001
 
 - Реализован скрипт src/bronze/ingest.py
 
-- Загружен датасет flight_data_2018_2024.csv
+- Загружен датасет flight_data_2018_2024.csv (https://www.kaggle.com/code/peymanradmanesh/flight-delay-analysis-2018-2024/input)
 
 - Результат: 582,425 строк, 105 колонок
 
@@ -90,6 +90,8 @@ mlflow ui --backend-store-uri file:./mlflow_local --port 5001
 
 df = pl.read_csv(csv_path, try_parse_dates=True)
 write_deltalake(bronze_path, df.to_pandas(), mode="overwrite")
+
+<img width="614" height="413" alt="image" src="https://github.com/user-attachments/assets/01bb02e3-3604-482d-a044-79f6c13a8a4b" />
 
 ### Silver Layer
 
@@ -126,6 +128,8 @@ df.with_columns([
      .otherwise(pl.lit("Winter")).alias("season"),
 ])
 
+<img width="491" height="307" alt="image" src="https://github.com/user-attachments/assets/69c65e55-4962-435a-a4bb-4f923fe77d8f" />
+
 ### Gold Layer
 
 Требование: Аналитические агрегаты + feature table для ML.
@@ -152,11 +156,17 @@ features = df.select([
 ])
 write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 
+<img width="568" height="48" alt="image" src="https://github.com/user-attachments/assets/adb62a91-28fa-4f2b-af5d-65b0088946b5" />
+
 ## 2. Машинное обучение
 
 ### Регрессия (предсказание задержки в минутах)
 
+<img width="220" height="48" alt="image" src="https://github.com/user-attachments/assets/3a5e14db-d82c-4ab4-817d-ad0ec6e07f7e" />
+
 ### Классификация (задержка > 15 минут)
+
+<img width="169" height="48" alt="image" src="https://github.com/user-attachments/assets/ab45e4a2-4c30-4569-a330-d526f7ab3df9" />
 
 ### Feature Importance
 
@@ -182,6 +192,10 @@ write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 
 - n_estimators, max_depth - гиперпараметры
 
+<img width="890" height="271" alt="image" src="https://github.com/user-attachments/assets/5d64644b-5c5a-4287-8b4d-fa12ef43754b" />
+
+<img width="874" height="48" alt="image" src="https://github.com/user-attachments/assets/01eadebb-a2b1-44de-a98d-e82834181c0d" />
+
 4. Логируемые метрики:
 
 - regression_mae
@@ -190,11 +204,27 @@ write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 
 - feature_imp_* - важность признаков
 
+<img width="879" height="222" alt="image" src="https://github.com/user-attachments/assets/2a7caade-cabe-466c-a2db-eb62db77f349" />
+
+<img width="885" height="247" alt="image" src="https://github.com/user-attachments/assets/480a5418-f3db-473d-ad8a-a3d7672d7193" />
+
+<img width="887" height="85" alt="image" src="https://github.com/user-attachments/assets/8e9d57e0-a8bf-4916-a814-ffd9c16e0d02" />
+
 5. Логируемые модели:
 
 - random_forest_regressor
 
 - random_forest_classifier
+
+<img width="921" height="259" alt="image" src="https://github.com/user-attachments/assets/ef66dee9-86fc-414a-a0ef-20e057bd0121" />
+
+<img width="896" height="137" alt="image" src="https://github.com/user-attachments/assets/30b33b4e-34a3-4356-acc9-7bf9cc2538f2" />
+
+<img width="813" height="134" alt="image" src="https://github.com/user-attachments/assets/875c0fb3-1e73-4977-9050-c92db118a84f" />
+
+<img width="719" height="142" alt="image" src="https://github.com/user-attachments/assets/46967c8e-dde0-4102-a664-2d761bd80e01" />
+
+<img width="184" height="143" alt="image" src="https://github.com/user-attachments/assets/a7b836ac-6231-461b-8bd2-4e5252db1556" />
 
 ## 5. Polars Lazy API и pushdown оптимизации
 
@@ -277,3 +307,21 @@ print(f"Current: {df_current.height:,} rows")
 ### 8. Демонстрационный скрипт
 
 Файл demo_delta_features.py
+
+1. TIME TRAVEL DEMO
+
+<img width="783" height="434" alt="image" src="https://github.com/user-attachments/assets/52e95c85-8d02-4a10-90d6-65e769826c60" />
+
+<img width="727" height="50" alt="image" src="https://github.com/user-attachments/assets/4c8bd37a-5fff-43e1-8cca-1b614851015c" />
+
+2. VACUUM DEMO
+
+<img width="783" height="256" alt="image" src="https://github.com/user-attachments/assets/4aa2a7ad-0855-4c68-96ff-f87d6a19615f" />
+
+3. OPTIMIZE & Z-ORDER DEMO
+
+<img width="791" height="415" alt="image" src="https://github.com/user-attachments/assets/d75e3381-42bd-4475-8e52-b5f3b89f3efe" />
+
+4. PARTITION PRUNING DEMO
+
+<img width="1338" height="598" alt="image" src="https://github.com/user-attachments/assets/173dc2a7-a530-45d0-ac7c-f7643b941ae5" />
