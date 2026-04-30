@@ -262,79 +262,18 @@ print(f"Current: {df_current.height:,} rows")
 
 ## 7. Технические требования
 
-Реализованы следующие оптимизации:
+- Хранилище: локальные папки data/
 
-1. Адаптивное количество партиций:
+- Polars lazy API: scan_delta() → filter() → group_by() → agg() → collect()
 
-...
-if use_optimization:
-        spark_builder = spark_builder \
-            .config("spark.sql.shuffle.partitions", "8") \
-            .config("spark.default.parallelism", "8") \
-            ...
+- README с explain(): демонстрация pushdown оптимизаций
 
-2. Кэширование данных:
+- Delta возможности (3+ сверх MERGE): OPTIMIZE, Z-ORDER, VACUUM, Time Travel
 
-...
-df = df.persist(StorageLevel.MEMORY_AND_DISK)
-df.count()
-...
+- MLflow логирование: параметры, метрики, модели, версия gold-таблицы
 
-3. Включение адаптивных запросов:
+- Структура src/, notebooks/, logs/
 
-...
-.config("spark.sql.adaptive.enabled", "true") \
-.config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
-...
-.config("spark.sql.adaptive.skewJoin.enabled", "true")
-...
+### 8. Демонстрационный скрипт
 
-## 7. Сравнение результатов и визуализация:
-
-Создан скрипт auto_plot_results.py для автоматического построения графиков:
-
-### Создаваемые графики:
-1. execution_time.png - сравнение времени выполнения
-
-<img width="1782" height="884" alt="image" src="https://github.com/user-attachments/assets/f2b4897f-e257-43de-a168-e546fcd514d3" />
-
-2. nodes_comparison.png - сравнение 1 DN vs 3 DN
-
-<img width="1482" height="881" alt="image" src="https://github.com/user-attachments/assets/acd4846d-a5da-4b43-9234-d7a8a5b400ac" />
-
-3. memory_usage.png - использование RAM
-
-<img width="1782" height="879" alt="image" src="https://github.com/user-attachments/assets/efe38b6d-a93b-4665-b5d1-35e1660e2a85" />
-
-4. time_vs_memory.png - компромисс время-память
-
-<img width="1477" height="1180" alt="image" src="https://github.com/user-attachments/assets/0cf3538a-7fd3-4363-b275-0526a83fe877" />
-
-5. trend.png - тренд производительности
-
-<img width="1482" height="884" alt="image" src="https://github.com/user-attachments/assets/7e095398-742b-4873-9f2a-52ed979f2e81" />
-
-6. speedup.png - ускорение от оптимизации
-
-<img width="1182" height="883" alt="image" src="https://github.com/user-attachments/assets/5a143ef6-eb13-4c52-a5af-c15385ecc7e7" />
-
-7. time_breakdown.png - разбивка времени выполнения
-
-<img width="1781" height="883" alt="image" src="https://github.com/user-attachments/assets/4355b514-69fa-44a7-a66c-ca87109fab3e" />
-
-### HTML отчет:
-
-Сгенерирован интерактивный HTML отчет с таблицами, графиками и выводами.
-
-# Выводы:
-
-- Лучшее время: 5.95 секунд в конфигурации 3DN_Optimized
-
-- Лучшее использование RAM: 38 MB в конфигурации 1DN_Optimized
-
-- Оптимизация на 1 DataNode дала ускорение в 1.15x
-
-- Масштабирование до 3 DataNodes дало ускорение в 1.24x
-
-
-
+Файл demo_delta_features.py
