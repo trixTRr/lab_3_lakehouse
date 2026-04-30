@@ -304,7 +304,7 @@ print(f"Current: {df_current.height:,} rows")
 
 - Структура src/, notebooks/, logs/
 
-### 8. Демонстрационный скрипт
+## 8. Демонстрационный скрипт
 
 Файл demo_delta_features.py
 
@@ -326,7 +326,7 @@ print(f"Current: {df_current.height:,} rows")
 
 <img width="1338" height="598" alt="image" src="https://github.com/user-attachments/assets/173dc2a7-a530-45d0-ac7c-f7643b941ae5" />
 
-### Выводы
+## Выводы
 
 Созданные агрегаты позволяют:
 
