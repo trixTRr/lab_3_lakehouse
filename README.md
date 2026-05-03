@@ -221,9 +221,9 @@ http://localhost:5001
 
 - n_estimators, max_depth - гиперпараметры
 
-<img width="890" height="271" alt="image" src="https://github.com/user-attachments/assets/5d64644b-5c5a-4287-8b4d-fa12ef43754b" />
+<img width="933" height="379" alt="image" src="https://github.com/user-attachments/assets/0b7ee172-fb17-43af-83cd-a885b01d7646" />
 
-<img width="874" height="48" alt="image" src="https://github.com/user-attachments/assets/01eadebb-a2b1-44de-a98d-e82834181c0d" />
+<img width="897" height="48" alt="image" src="https://github.com/user-attachments/assets/b16f9137-38c4-40b1-a933-0218c9ca23ff" />
 
 4. Логируемые метрики:
 
@@ -233,11 +233,11 @@ http://localhost:5001
 
 - feature_imp_* - важность признаков
 
-<img width="879" height="222" alt="image" src="https://github.com/user-attachments/assets/2a7caade-cabe-466c-a2db-eb62db77f349" />
+<img width="912" height="369" alt="image" src="https://github.com/user-attachments/assets/a8ec7b4c-984a-4a29-9989-ce74a4cdb1f1" />
 
-<img width="885" height="247" alt="image" src="https://github.com/user-attachments/assets/480a5418-f3db-473d-ad8a-a3d7672d7193" />
+<img width="905" height="275" alt="image" src="https://github.com/user-attachments/assets/ac44877d-b8dd-4857-a4ac-73e7e7d27167" />
 
-<img width="887" height="85" alt="image" src="https://github.com/user-attachments/assets/8e9d57e0-a8bf-4916-a814-ffd9c16e0d02" />
+<img width="900" height="88" alt="image" src="https://github.com/user-attachments/assets/c267fba2-942a-4638-b7da-89c328d12c57" />
 
 5. Логируемые модели:
 
@@ -245,15 +245,15 @@ http://localhost:5001
 
 - random_forest_classifier
 
-<img width="921" height="259" alt="image" src="https://github.com/user-attachments/assets/ef66dee9-86fc-414a-a0ef-20e057bd0121" />
+<img width="863" height="256" alt="image" src="https://github.com/user-attachments/assets/0626234b-1e06-4095-a14f-2280ffcbaef5" />
 
-<img width="896" height="137" alt="image" src="https://github.com/user-attachments/assets/30b33b4e-34a3-4356-acc9-7bf9cc2538f2" />
+<img width="842" height="151" alt="image" src="https://github.com/user-attachments/assets/4fd5ab0a-8ef0-465b-928d-2e32b99c14ac" />
 
-<img width="813" height="134" alt="image" src="https://github.com/user-attachments/assets/875c0fb3-1e73-4977-9050-c92db118a84f" />
+<img width="760" height="137" alt="image" src="https://github.com/user-attachments/assets/0ab1c217-d90a-4302-b3c2-5574a6ea7f90" />
 
-<img width="719" height="142" alt="image" src="https://github.com/user-attachments/assets/46967c8e-dde0-4102-a664-2d761bd80e01" />
+<img width="734" height="150" alt="image" src="https://github.com/user-attachments/assets/e073cee9-799f-4f51-8588-4db615424642" />
 
-<img width="184" height="143" alt="image" src="https://github.com/user-attachments/assets/a7b836ac-6231-461b-8bd2-4e5252db1556" />
+<img width="249" height="150" alt="image" src="https://github.com/user-attachments/assets/e940f16a-05d1-4b33-b3ff-663285aab2df" />
 
 ## 5. Polars Lazy API и pushdown оптимизации
 
@@ -339,21 +339,19 @@ print(f"Current: {df_current.height:,} rows")
 
 1. TIME TRAVEL DEMO
 
-<img width="783" height="434" alt="image" src="https://github.com/user-attachments/assets/52e95c85-8d02-4a10-90d6-65e769826c60" />
-
-<img width="727" height="50" alt="image" src="https://github.com/user-attachments/assets/4c8bd37a-5fff-43e1-8cca-1b614851015c" />
+<img width="873" height="295" alt="image" src="https://github.com/user-attachments/assets/38f8be4f-a7a9-4680-91a4-8dfb8e4bde3f" />
 
 2. VACUUM DEMO
 
-<img width="783" height="256" alt="image" src="https://github.com/user-attachments/assets/4aa2a7ad-0855-4c68-96ff-f87d6a19615f" />
+<img width="850" height="262" alt="image" src="https://github.com/user-attachments/assets/f04f425a-130a-47e3-acc5-3c0fc16841f0" />
 
 3. OPTIMIZE & Z-ORDER DEMO
 
-<img width="791" height="415" alt="image" src="https://github.com/user-attachments/assets/d75e3381-42bd-4475-8e52-b5f3b89f3efe" />
+<img width="851" height="435" alt="image" src="https://github.com/user-attachments/assets/9bebef40-63a7-4223-95fc-d6b15fec1834" />
 
 4. PARTITION PRUNING DEMO
 
-<img width="1338" height="598" alt="image" src="https://github.com/user-attachments/assets/173dc2a7-a530-45d0-ac7c-f7643b941ae5" />
+<img width="1453" height="643" alt="image" src="https://github.com/user-attachments/assets/c94e1b7b-66f3-4b8a-b82d-e5510697fc5e" />
 
 ## Выводы
 
@@ -375,26 +373,32 @@ Feature table содержит:
 
 - Исходный датасет: 582,425 строк
 
-- После очистки: 557,733 строк
+- После очистки: 221,511 строк
 
-- Feature table: 446,186 строк
+Вывод: Очистка данных удалила 62% записей. Причины следующие:
 
-Вывод: Очистка данных удалила всего 4.2% записей, что говорит о хорошем качестве исходного датасета.
+1. Удалены отменённые рейсы (Cancelled = 1) - ~3.8%
+
+2. Удалены записи с NULL в ArrDelay - ~15%
+
+3. Удалены выбросы (задержка > 12 часов) - ~0.2%
+
+4. Остальные потери связаны с удалением дубликатов и служебных записей
 
 Качество моделей:
 
-1. Регрессия: MAE = 28.73 мин
+1. Регрессия: MAE = 30.44 мин
 
 - Модель способна предсказывать задержки с приемлемой точностью
 
-- Ошибка в 29 минут - значительная для коротких перелётов
+- Ошибка в 30 минут - значительная для коротких перелётов
 
 - Для улучшения нужны дополнительные признаки (погода, день недели, праздники)
 
-2. Классификация: AUC = 0.626
+2. Классификация: AUC = 0.619
 
 - Модель способна отличать задержанные рейсы от своевременных
 
-- AUC 0.626 - умеренное качество (хороший результат - 0.7-0.8)
+- AUC 0.619 - умеренное качество (хороший результат - 0.7-0.8)
 
 Вывод: Регрессия более полезна для практики, так как даёт точное время задержки.
