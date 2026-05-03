@@ -40,7 +40,7 @@ def create_aggregates():
     write_deltalake(f"{gold_path}/delays_by_dest_hour", agg1.to_pandas(), mode="overwrite")
     write_deltalake(f"{gold_path}/delays_by_carrier_season", agg2.to_pandas(), mode="overwrite")
     
-    print(f"Aggregates created at {gold_path}")
+    print(f"Aggregates created")
 
 if __name__ == "__main__":
     create_aggregates()

@@ -27,7 +27,7 @@ def create_feature_table():
     os.makedirs(gold_path, exist_ok=True)
     write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
     
-    print(f"Feature table created at {gold_path}")
+    print(f"Feature table created")
 
 if __name__ == "__main__":
     create_feature_table()
