@@ -183,13 +183,13 @@ features = df.select([
 ])
 write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 
-<img width="541" height="93" alt="image" src="https://github.com/user-attachments/assets/aaebf5fb-f888-4e5e-93e9-f0092cc0b48e" />
+<img width="371" height="97" alt="image" src="https://github.com/user-attachments/assets/89ade2be-5c61-4958-98e3-b91e1ba95bcc" />
 
 ## 2. Машинное обучение
 
 ### Регрессия (предсказание задержки в минутах)
 
-<img width="277" height="48" alt="image" src="https://github.com/user-attachments/assets/f60ff10e-baaa-43bf-bb3b-11146b34c658" />
+<img width="174" height="48" alt="image" src="https://github.com/user-attachments/assets/6da82250-168d-4cf0-8e29-6a0a2cdb14ae" />
 
 ### Классификация (задержка > 15 минут)
 
@@ -217,13 +217,9 @@ http://localhost:5001
 
 - gold_table_version - версия gold-таблицы
 
-- gold_table_path - путь к таблице
-
 - n_estimators, max_depth - гиперпараметры
 
-<img width="933" height="379" alt="image" src="https://github.com/user-attachments/assets/0b7ee172-fb17-43af-83cd-a885b01d7646" />
-
-<img width="897" height="48" alt="image" src="https://github.com/user-attachments/assets/b16f9137-38c4-40b1-a933-0218c9ca23ff" />
+<img width="925" height="384" alt="image" src="https://github.com/user-attachments/assets/1b9c9e7a-e103-4c20-87f0-bb79f0d5ad44" />
 
 4. Логируемые метрики:
 
@@ -245,15 +241,17 @@ http://localhost:5001
 
 - random_forest_classifier
 
-<img width="863" height="256" alt="image" src="https://github.com/user-attachments/assets/0626234b-1e06-4095-a14f-2280ffcbaef5" />
+<img width="876" height="264" alt="image" src="https://github.com/user-attachments/assets/6e8acd2d-5a98-4b33-8625-8fa15b23aad3" />
 
-<img width="842" height="151" alt="image" src="https://github.com/user-attachments/assets/4fd5ab0a-8ef0-465b-928d-2e32b99c14ac" />
+<img width="792" height="158" alt="image" src="https://github.com/user-attachments/assets/637874fa-c4a9-4a55-a248-0907f11083a7" />
 
-<img width="760" height="137" alt="image" src="https://github.com/user-attachments/assets/0ab1c217-d90a-4302-b3c2-5574a6ea7f90" />
+6. Графики и прогнозы:
 
-<img width="734" height="150" alt="image" src="https://github.com/user-attachments/assets/e073cee9-799f-4f51-8588-4db615424642" />
+<img width="1016" height="594" alt="image" src="https://github.com/user-attachments/assets/1a7f1b23-0c9c-4d9e-8fac-c4b51833baa4" />
 
-<img width="249" height="150" alt="image" src="https://github.com/user-attachments/assets/e940f16a-05d1-4b33-b3ff-663285aab2df" />
+<img width="1006" height="591" alt="image" src="https://github.com/user-attachments/assets/a2a02a96-9217-45f7-9ffc-14e5a00b2361" />
+
+<img width="1242" height="625" alt="image" src="https://github.com/user-attachments/assets/38dd8b7d-f54c-4440-8d9a-9b77484119b8" />
 
 ## 5. Polars Lazy API и pushdown оптимизации
 
@@ -387,7 +385,7 @@ Feature table содержит:
 
 Качество моделей:
 
-1. Регрессия: MAE = 30.44 мин
+1. Регрессия: MAE = 30.66 мин
 
 - Модель способна предсказывать задержки с приемлемой точностью
 
