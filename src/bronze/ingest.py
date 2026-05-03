@@ -1,10 +1,10 @@
 import polars as pl
-from deltalake import write_deltalake
+from deltalake import write_deltalake, DeltaTable
 import os
 from datetime import datetime
 
 def ingest_bronze():
-    # Загрузка CSV в Delta таблицу (локально)
+    # Загрузка CSV в Delta таблицу с партиционированием по дате
     
     raw_path = "data/raw"
     bronze_path = "data/bronze/flights"
@@ -26,13 +26,13 @@ def ingest_bronze():
     for csv_file in csv_files:
         print(f"\nОбработка {csv_file}...")
         
-        # Читаем CSV с указанием типов для важных колонок
+        # Читаем CSV
         try:
             df = pl.read_csv(
                 os.path.join(raw_path, csv_file),
                 null_values=["NA", "", "NULL", "null"],
                 try_parse_dates=True,
-                infer_schema_length=10000  # Увеличиваем для лучшего определения типов
+                infer_schema_length=10000
             )
             print(f"   Прочитано строк: {df.height}")
             print(f"   Исходных колонок: {len(df.columns)}")
@@ -40,7 +40,7 @@ def ingest_bronze():
             print(f"   Ошибка чтения: {e}")
             continue
         
-        # 1. Удаляем столбцы, которые полностью состоят из NULL
+        # Удаляем полностью пустые колонки
         before_cols = len(df.columns)
         df = df.drop([col for col in df.columns if df[col].null_count() == df.height])
         after_cols = len(df.columns)
@@ -48,52 +48,122 @@ def ingest_bronze():
         if before_cols > after_cols:
             print(f"   Удалено пустых колонок: {before_cols - after_cols}")
         
-        # 2. Преобразуем типы для критических колонок
-        # Список колонок, которые должны быть числовыми
-        numeric_cols = ["ARR_DELAY", "DEP_DELAY", "DISTANCE", "CANCELLED", "DIVERTED"]
+        # Преобразуем типы для числовых колонок
+        numeric_cols = ["ARR_DELAY", "DEP_DELAY", "DISTANCE", "CANCELLED", "DIVERTED", 
+                        "ArrDelay", "DepDelay", "Distance", "Cancelled", "Diverted"]
         for col in numeric_cols:
             if col in df.columns:
                 df = df.with_columns(pl.col(col).cast(pl.Float64).fill_null(0))
         
-        # 3. Преобразуем строковые колонки
-        string_cols = ["OP_CARRIER", "ORIGIN", "DEST", "TAIL_NUM", "FL_NUM"]
+        # Преобразуем строковые колонки
+        string_cols = ["OP_CARRIER", "ORIGIN", "DEST", "TAIL_NUM", "FL_NUM",
+                       "Marketing_Airline_Network", "Origin", "Dest"]
         for col in string_cols:
             if col in df.columns:
                 df = df.with_columns(pl.col(col).cast(pl.Utf8).fill_null("UNKNOWN"))
         
-        # 4. Преобразуем дату
+        # Определяем колонку с датой
+        date_col = None
         if "FL_DATE" in df.columns:
-            df = df.with_columns(pl.col("FL_DATE").cast(pl.Utf8))
+            date_col = "FL_DATE"
+        elif "FlightDate" in df.columns:
+            date_col = "FlightDate"
         
-        # Добавляем технические колонки
-        df = df.with_columns([
-            pl.lit(datetime.now().isoformat()).alias("_ingestion_timestamp"),
-            pl.lit(csv_file).alias("_source_file")
-        ])
+        if date_col is None:
+            print(f"   Нет колонки с датой! Загружаем целиком")
+            df = df.with_columns([
+                pl.lit(datetime.now().isoformat()).alias("_ingestion_timestamp"),
+                pl.lit(csv_file).alias("_source_file")
+            ])
+            write_deltalake(bronze_path, df.to_pandas(), mode="overwrite")
+            continue
         
-        # Проверяем финальные типы
-        print(f"   Финальных колонок: {len(df.columns)}")
-        print(f"   Типы данных:")
-        for col in df.columns[:5]:  # Показываем первые 5 колонок
-            print(f"      - {col}: {df[col].dtype}")
+        # Преобразуем дату в нужный формат
+        if df[date_col].dtype != pl.Date:
+            df = df.with_columns(pl.col(date_col).str.strptime(pl.Date, "%Y-%m-%d"))
         
-        # Записываем в Delta
-        mode = "overwrite" if os.path.exists(f"{bronze_path}/_delta_log") else "overwrite"
+        # Проверяем, есть ли уже колонки Year и Month
+        has_year = "Year" in df.columns
+        has_month = "Month" in df.columns
+        
+        # Определяем колонки для партиционирования
+        if has_year and has_month:
+            print(f"   Используем существующие колонки 'Year' и 'Month'")
+            
+            # Ищем колонку с днем месяца (разные варианты написания)
+            day_col = None
+            for col in ["DayOfMonth", "DayofMonth", "Day_Of_Month", "DAY_OF_MONTH"]:
+                if col in df.columns:
+                    day_col = col
+                    break
+            
+            if day_col is None:
+                # Если нет - добавляем
+                df = df.with_columns(pl.col(date_col).dt.day().alias("DayOfMonth"))
+                day_col = "DayOfMonth"
+                print(f"   Добавлена колонка 'DayOfMonth'")
+            else:
+                print(f"   Используем существующую колонку '{day_col}'")
+            
+            partition_cols = ["Year", "Month", day_col]
+            
+        else:
+            # Если нет Year/Month - создаём новые с другими именами
+            print(f"   Создаём колонки 'year_num', 'month_num', 'day_num'")
+            
+            if "year_num" not in df.columns:
+                df = df.with_columns(pl.col(date_col).dt.year().alias("year_num"))
+            if "month_num" not in df.columns:
+                df = df.with_columns(pl.col(date_col).dt.month().alias("month_num"))
+            if "day_num" not in df.columns:
+                df = df.with_columns(pl.col(date_col).dt.day().alias("day_num"))
+            
+            partition_cols = ["year_num", "month_num", "day_num"]
+        
+        # Добавляем служебные колонки (если их ещё нет)
+        if "_ingestion_timestamp" not in df.columns:
+            df = df.with_columns(pl.lit(datetime.now().isoformat()).alias("_ingestion_timestamp"))
+        if "_source_file" not in df.columns:
+            df = df.with_columns(pl.lit(csv_file).alias("_source_file"))
+        
+        # Сортируем по дате
+        df = df.sort(date_col)
+        
+        unique_days = df[date_col].unique().len()
+        print(f"   Уникальных дней: {unique_days}")
+        print(f"   Партиционирование по: {partition_cols}")
+        
+        # Записываем все данные одной операцией
         try:
-            write_deltalake(bronze_path, df.to_pandas(), mode=mode)
-            print(f"   Записано в Delta (mode={mode})")
+            # Удаляем старую таблицу
+            if os.path.exists(bronze_path):
+                import shutil
+                shutil.rmtree(bronze_path)
+                print(f"   Удалена старая таблица")
+            
+            # Записываем с партиционированием
+            write_deltalake(
+                bronze_path, 
+                df.to_pandas(), 
+                mode="overwrite",
+                partition_by=partition_cols
+            )
+            print(f"   Данные записаны с партиционированием по {partition_cols}")
+                
         except Exception as e:
             print(f"   Ошибка записи: {e}")
-            # Показываем проблемные колонки
-            print(f"   Проверка типов колонок:")
-            for col in df.columns:
-                print(f"      {col}: {df[col].dtype}")
             continue
     
     # Информация о результате
     if os.path.exists(f"{bronze_path}/_delta_log"):
+        dt = DeltaTable(bronze_path)
         print(f"\nBronze layer создан!")
         print(f"   Путь: {bronze_path}")
+        print(f"   Версия: {dt.version()}")
+        
+        print(f"\n   История версий (последние 5):")
+        for h in dt.history()[:5]:
+            print(f"      Version {h['version']}: {h['operation']} - {h['timestamp']}")
     else:
         print(f"\nНе удалось создать Bronze слой")
 
