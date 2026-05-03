@@ -175,8 +175,6 @@ df.with_columns([
 
 2. Feature table для ML:
 
-- Результат: 446,186 строк, 9 признаков + целевая переменная
-
 - Признаки: hour, day_of_week, season, OP_CARRIER, ORIGIN, DEST, DISTANCE, DEP_DELAY, ARR_DELAY
 
 features = df.select([
@@ -185,17 +183,17 @@ features = df.select([
 ])
 write_deltalake(gold_path, features.to_pandas(), mode="overwrite")
 
-<img width="568" height="48" alt="image" src="https://github.com/user-attachments/assets/adb62a91-28fa-4f2b-af5d-65b0088946b5" />
+<img width="541" height="93" alt="image" src="https://github.com/user-attachments/assets/aaebf5fb-f888-4e5e-93e9-f0092cc0b48e" />
 
 ## 2. Машинное обучение
 
 ### Регрессия (предсказание задержки в минутах)
 
-<img width="220" height="48" alt="image" src="https://github.com/user-attachments/assets/3a5e14db-d82c-4ab4-817d-ad0ec6e07f7e" />
+<img width="277" height="48" alt="image" src="https://github.com/user-attachments/assets/f60ff10e-baaa-43bf-bb3b-11146b34c658" />
 
 ### Классификация (задержка > 15 минут)
 
-<img width="169" height="48" alt="image" src="https://github.com/user-attachments/assets/ab45e4a2-4c30-4569-a330-d526f7ab3df9" />
+<img width="149" height="48" alt="image" src="https://github.com/user-attachments/assets/244990e7-0fb7-444d-b0b3-368cd3db7808" />
 
 ### Feature Importance
 
