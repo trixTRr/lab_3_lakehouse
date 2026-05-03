@@ -87,7 +87,7 @@ mlflow ui --backend-store-uri file:./mlflow_local --port 5001
 
 - Загружен датасет flight_data_2018_2024.csv (https://www.kaggle.com/code/peymanradmanesh/flight-delay-analysis-2018-2024/input)
 
-- Результат: 582,425 строк, 105 колонок
+- Результат: 582,425 строк, 120 колонок
 
 - Сплитование: по дням
 
@@ -98,7 +98,7 @@ mlflow ui --backend-store-uri file:./mlflow_local --port 5001
 df = pl.read_csv(csv_path, try_parse_dates=True)
 write_deltalake(bronze_path, df.to_pandas(), mode="overwrite")
 
-<img width="614" height="413" alt="image" src="https://github.com/user-attachments/assets/01bb02e3-3604-482d-a044-79f6c13a8a4b" />
+<img width="823" height="458" alt="image" src="https://github.com/user-attachments/assets/8311fc72-74ea-4ec5-9eed-2cd2b0385ccc" />
 
 ### Silver Layer
 
@@ -128,7 +128,27 @@ write_deltalake(bronze_path, df.to_pandas(), mode="overwrite")
 
 4. Нормализация числовых признаков (от 0 до 1)
 
-5. Результат: 557,733 строк, 13 колонок
+5. Выбор колонок:
+
+    silver_df = df.select([
+        pl.col("FlightDate").alias("flight_date"),
+        pl.col("Year").alias("year"),
+        pl.col("Month").alias("month"),
+        (pl.col("CRSDepTime") // 100).alias("hour"),
+        pl.col("DayOfWeek").alias("day_of_week"),
+        pl.col("season").alias("season"),
+        pl.col("Marketing_Airline_Network").alias("OP_CARRIER"),
+        pl.col("Origin").alias("ORIGIN"),
+        pl.col("Dest").alias("DEST"),
+        pl.col("route").alias("route"),
+        pl.col("Distance").alias("DISTANCE"),
+        pl.col("DepDelay").alias("DEP_DELAY"),
+        pl.col("ArrDelay").alias("ARR_DELAY"),
+    ])
+
+6. При повторном запуске пайплайна используется MERGE для обновления данных
+
+7. Результат: 221,511 строк, 18 колонок
 
 df.with_columns([
     (pl.col("CRSDepTime") // 100).alias("hour"),
@@ -137,7 +157,7 @@ df.with_columns([
      .otherwise(pl.lit("Winter")).alias("season"),
 ])
 
-<img width="491" height="307" alt="image" src="https://github.com/user-attachments/assets/69c65e55-4962-435a-a4bb-4f923fe77d8f" />
+<img width="835" height="555" alt="image" src="https://github.com/user-attachments/assets/164920ef-e247-4a81-9ad5-f7204b6868b8" />
 
 ### Gold Layer
 
