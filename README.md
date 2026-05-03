@@ -89,6 +89,8 @@ mlflow ui --backend-store-uri file:./mlflow_local --port 5001
 
 - Результат: 582,425 строк, 105 колонок
 
+- Сплитование: по дням
+
 - Формат: Delta Lake (Parquet + _delta_log)
 
 - Режим записи: overwrite для первой загрузки
@@ -124,7 +126,9 @@ write_deltalake(bronze_path, df.to_pandas(), mode="overwrite")
 
 3. Партиционирование: по year, month (Z-ORDER оптимизация)
 
-4. Результат: 557,733 строк, 13 колонок
+4. Нормализация числовых признаков (от 0 до 1)
+
+5. Результат: 557,733 строк, 13 колонок
 
 df.with_columns([
     (pl.col("CRSDepTime") // 100).alias("hour"),
